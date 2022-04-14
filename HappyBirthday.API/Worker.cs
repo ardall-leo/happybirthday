@@ -32,6 +32,8 @@ namespace HappyBirthday.API
 
                 var next = DateTime.SpecifyKind(DateTime.UtcNow.Date.AddDays(1), DateTimeKind.Utc);
                 var sleepingTime = next.Subtract(DateTime.UtcNow);
+
+                _logger.LogInformation($"Sleep thread {Math.Round(sleepingTime.TotalMinutes, 2)} minutes for next birthday checking.");
                 await Task.Delay(sleepingTime); 
             }
         }

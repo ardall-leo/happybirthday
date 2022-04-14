@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HappyBirthday.Domain", "Hap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HappyBirthday.API", "HappyBirthday.API\HappyBirthday.API.csproj", "{709349C2-8D5C-4A99-AB25-939117549904}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HappyBirthday.Infrastructure", "HappyBirthday.Infrastructure\HappyBirthday.Infrastructure.csproj", "{A9A0D7EF-C454-4983-8DA7-3FD1DDB22639}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HappyBirthday.Infrastructure", "HappyBirthday.Infrastructure\HappyBirthday.Infrastructure.csproj", "{A9A0D7EF-C454-4983-8DA7-3FD1DDB22639}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HappyBirthday.UnitTest", "G:\work\github\happybirthday\HappyBirthday.UnitTest\HappyBirthday.UnitTest.csproj", "{17074A72-1C34-4E7B-8CB0-12F56A1B38D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{A9A0D7EF-C454-4983-8DA7-3FD1DDB22639}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9A0D7EF-C454-4983-8DA7-3FD1DDB22639}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9A0D7EF-C454-4983-8DA7-3FD1DDB22639}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17074A72-1C34-4E7B-8CB0-12F56A1B38D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17074A72-1C34-4E7B-8CB0-12F56A1B38D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17074A72-1C34-4E7B-8CB0-12F56A1B38D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17074A72-1C34-4E7B-8CB0-12F56A1B38D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

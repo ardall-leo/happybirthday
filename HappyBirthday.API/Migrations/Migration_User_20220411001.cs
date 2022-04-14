@@ -12,7 +12,7 @@ namespace HappyBirthday.API.Migrations
             Delete.Table("User");
         }
 
-        public override void Up()
+        public override void Up() 
         {
             Create.Table("User")
                 .WithColumn("Id").AsGuid().NotNullable().PrimaryKey()
@@ -22,10 +22,16 @@ namespace HappyBirthday.API.Migrations
                 .WithColumn("Location").AsString().Nullable();
 
             Create.Table("BirthdayGreeting")
-                .WithColumn("Id").AsInt32().NotNullable().PrimaryKey().Identity(1, 1)
+                .WithColumn("Id").AsGuid().NotNullable().PrimaryKey()
                 .WithColumn("UserId").AsGuid().NotNullable().ForeignKey("User", "Id")
                 .WithColumn("Year").AsInt32().NotNullable()
-                .WithColumn("__SENT_TS").AsDateTime2();
+                .WithColumn("__SCHEDULED_TS").AsDateTime2().Nullable()
+                .WithColumn("__SENT_TS").AsDateTime2().Nullable();
+
+            Create.ForeignKey("FK_BirthdayGreeting_UserId")
+               .FromTable("BirthdayGreeting").ForeignColumn("UserId")
+               .ToTable("User").PrimaryColumn("Id")
+               .OnDeleteOrUpdate(System.Data.Rule.Cascade);
         }
     }
 }

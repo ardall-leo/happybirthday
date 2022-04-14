@@ -13,6 +13,7 @@ using FluentMigrator;
 using FluentMigrator.SqlServer;
 using FluentMigrator.Runner;
 using System.Reflection;
+using HappyBirthday.Domain.Models.Configs;
 
 namespace HappyBirthday.API
 {
@@ -45,11 +46,16 @@ namespace HappyBirthday.API
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // migrate
-            using var scope = app.ApplicationServices.CreateScope();
-            var runner = scope.ServiceProvider.GetService<IMigrationRunner>();
-            runner.ListMigrations();
-            //runner.MigrateDown(-1);
-            runner.MigrateUp();
+            var appConfig = app.ApplicationServices.GetService<AppConfig>();
+
+            if (appConfig.UseMigration)
+            {
+                using var scope = app.ApplicationServices.CreateScope();
+                var runner = scope.ServiceProvider.GetService<IMigrationRunner>();
+                runner.ListMigrations();
+                runner.MigrateDown(-1);
+                runner.MigrateUp();
+            }
 
             if (env.IsDevelopment())
             {

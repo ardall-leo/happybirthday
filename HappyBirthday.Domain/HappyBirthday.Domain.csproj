@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="NodaTime" Version="3.0.10" />
     <PackageReference Include="NServiceBus" Version="7.5.0" />
   </ItemGroup>
 

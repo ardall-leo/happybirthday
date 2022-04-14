@@ -17,7 +17,8 @@ namespace HappyBirthday.API.Handlers
 
         public async Task Handle(BirthdayEvent message, IMessageHandlerContext context)
         {
-            await _service.SendHappyBirthday(message.BirthdayUser);
+            await _service.SayHappyBirthday(message.BirthdayUser);
+            await _service.UpdateGreeting(message.GreetingId, message.BirthdayUser);
         }
     }
 }

@@ -6,24 +6,25 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using NServiceBus;
 using HappyBirthday.Domain.Interfaces;
 using HappyBirthday.Infrastructure.Services;
+using HappyBirthday.Domain.Models.Configs;
+using HappyBirthday.Infrastructure.Database;
 
 try
 {
     using IHost host = Host.CreateDefaultBuilder(args)
         .UseNServiceBus(hostBuilderContext =>
         {
-            var endpointConfiguration = new EndpointConfiguration("sender");
-            //var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
-            var connection = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=happybirthday;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-            
+            var config = hostBuilderContext.Configuration;
+            var rootConfig = new AppConfig();
+            config.Bind("AppConfig", rootConfig);
+
+            var endpointConfiguration = new EndpointConfiguration(rootConfig.ServiceBus.EndpointName);
+
             var transport = endpointConfiguration.UseTransport<SqlServerTransport>();
-            transport.ConnectionString(connection);
+            transport.ConnectionString(rootConfig.ServiceBus.ConnStr);
 
             endpointConfiguration.EnableInstallers();
 
@@ -32,13 +33,13 @@ try
             recoverability.Immediate(i => i.NumberOfRetries(0));    // disabling immediate retry
             recoverability.Delayed(d =>
             {
-                d.NumberOfRetries(3);
-                d.TimeIncrease(TimeSpan.FromMinutes(2));
+                d.NumberOfRetries(rootConfig.ServiceBus.MaxRetryAttempt);
+                d.TimeIncrease(TimeSpan.FromMinutes(rootConfig.ServiceBus.RetryInterval));
             });
 
             // when the error persist, move to retry queue, this needs to involve administrator to check it further why the error persist
             // and use ServiceInsight to retry
-            endpointConfiguration.SendFailedMessagesTo("retry");
+            endpointConfiguration.SendFailedMessagesTo(rootConfig.ServiceBus.RetryEndpoint);
 
             return endpointConfiguration;
         })
@@ -48,7 +49,13 @@ try
         })
         .ConfigureServices((hostContext, services) =>
         {
+            var config = hostContext.Configuration;
+            var rootConfig = new AppConfig();
+            config.Bind("AppConfig", rootConfig);
+            services.AddSingleton(rootConfig);
             services.AddLogging(s => s.AddSerilog());
+            services.AddSingleton<ApiClient>();
+            services.AddSingleton<IDbConnectionFactory, DbFactory>();
             services.AddTransient<IBirthdayService, BirthdayService>();
             services.AddSingleton<IBirthdayWorkflow, BirthdayWorkflow>();
             services.AddHostedService<Worker>();

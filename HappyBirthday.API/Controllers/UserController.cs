@@ -1,49 +1,62 @@
-﻿using HappyBirthday.Domain.Models;
+﻿using HappyBirthday.Domain.Interfaces;
+using HappyBirthday.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace HappyBirthday.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
+        private readonly IBirthdayService _birthdayService;
 
-        public UserController(ILogger<UserController> logger)
+        public UserController(ILogger<UserController> logger, IBirthdayService birthdayService)
         {
             _logger = logger;
+            _birthdayService = birthdayService;
         }
 
-        [HttpGet]
-        public IEnumerable<User> Get()
+        [HttpGet("users/birthday")]
+        public async Task<IActionResult> GetBirthday()
         {
-            var rng = new Random();
-            return null;
+            try
+            {
+                return Ok(await _birthdayService.GetBirthdayUsers());
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        [HttpGet]
-        public IEnumerable<User> GetBirthday()
+        [HttpPost("user")]
+        public async Task<IActionResult> Create([FromBody] User newUser)
         {
-            return null;
+            try
+            {
+                return Ok(await _birthdayService.CreateUser(newUser));
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        [HttpPost]
-        public Task Create([FromBody] User newUser)
+        [HttpDelete("user/{id}")]
+        public async Task<IActionResult> Delete(string id)
         {
-
-            return null;
-        }
-
-        [HttpDelete]
-        public Task Delete(string id)
-        {
-
-            return null;
+            try
+            {
+                await _birthdayService.DeleteUser(id);
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }
